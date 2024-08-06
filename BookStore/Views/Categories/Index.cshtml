@@ -59,24 +59,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @{ int c = 1; }
+                        @{
+                            int c = 1;
+                        }
                         @foreach (var category in Model)
                         {
                             <tr>
                                 <td>@c</td>
-                                @{ c++; }
+                                @{
+                                    c++;
+                                }
                                 <td>@category.Name</td>
-                                <td>@category.CreatedOn.ToString("dd-MM-yyyy")</td>
-                                <td>@category.LastUpdatedOn?.ToString("dd-MM-yyyy")</td>
+                                <td>@category.CreatedOn.ToString()</td>
+                                @* <td>@category.CreatedOn.ToString("dd-MM-yyyy")</td> *@
+                                @* <td>@category.LastUpdatedOn?.ToString("dd-MM-yyyy")</td> *@
+                                <td id="js-last-updated-on">@category.LastUpdatedOn?.ToString()</td>
                                 <td>
-                                    @(!category.IsDeleted ? "Available" : "Deleted")
+                                    <span class="badge badge-light-@(category.IsDeleted? "danger" : "success") js-status">
+                                        @(category.IsDeleted ? "Deleted" : "Available")
+                                    </span>
                                 </td>
                                 <td>
-                                    <a class="btn btn-sm btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id">
-                                        Edit
-                                    </a>
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-light-primary" data-bs-toggle="dropdown" aria-expanded="false">
+                                            •••
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id">Edit</a></li>
+                                            <li>
+                                                <a href="#" class="dropdown-item js-toggle-status" data-id="@category.Id">
+                                                    Toggle State
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </td>
-
                             </tr>
                         }
                     </tbody>
@@ -85,3 +102,31 @@
         }
     </div>
 </div>
+@Html.AntiForgeryToken()
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('.js-toggle-status').on('click', function () {
+                var toggleButton = $(this);
+                $.ajax({
+                    url: '/Categories/ToggleStatus/' + toggleButton.data('id'),
+                    method: 'POST',
+                    data: {
+                        '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (lastUpdatedOn) {
+                        var status = toggleButton.parents('tr').find('.js-status');
+                        status.text(status.text().trim() === 'Deleted' ? 'Available' : 'Deleted');
+                        status.toggleClass('badge-light-danger badge-light-success');
+
+                        var updatedOn = toggleButton.parents('tr').find('#js-last-updated-on');
+                        updatedOn.text(lastUpdatedOn);
+                    }
+                });
+            });
+        });
+    </script>
+
+}

@@ -17,7 +17,7 @@ public class CategoriesController : Controller
     [HttpGet]
     public IActionResult Index()
     {
-        var categories = _context.Categories.ToList();
+        var categories = _context.Categories.AsNoTracking().ToList();
         return View(categories);
     }
 
@@ -84,4 +84,21 @@ public class CategoriesController : Controller
         _context.SaveChanges();
         return RedirectToAction(nameof(Index));
     }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult ToggleStatus(int id)
+    {
+        Category? category = _context.Categories.Find(id);
+
+        if (category is null)
+            return NotFound();
+
+        category.IsDeleted = !category.IsDeleted;
+        category.LastUpdatedOn = DateTime.Now;
+
+        _context.SaveChanges();
+
+        return Ok(category.LastUpdatedOn.ToString());
+    }
+
 }
