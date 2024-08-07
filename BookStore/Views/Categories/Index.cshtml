@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Categories";
 }
-
+<span id="feedbackMessage" class="d-none">@TempData["feedbackMessage"]</span>
 <div class="card shadow-sm">
     <div class="card-header">
         <h1 class="card-title">
@@ -109,24 +109,57 @@
     <script>
         $(document).ready(function () {
             $('.js-toggle-status').on('click', function () {
-                var toggleButton = $(this);
-                $.ajax({
-                    url: '/Categories/ToggleStatus/' + toggleButton.data('id'),
-                    method: 'POST',
-                    data: {
-                        '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: "btn btn-danger",
+                        cancelButton: "btn btn-success"
                     },
-                    success: function (lastUpdatedOn) {
-                        var status = toggleButton.parents('tr').find('.js-status');
-                        status.text(status.text().trim() === 'Deleted' ? 'Available' : 'Deleted');
-                        status.toggleClass('badge-light-danger badge-light-success');
+                    buttonsStyling: false
+                });
+                swalWithBootstrapButtons.fire({
+                    title: "Are you sure?",
+                    text: "You want to toggle this field status",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "cancel",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var toggleButton = $(this);
+                        $.ajax({
+                            url: '/Categories/ToggleStatus/' + toggleButton.data('id'),
+                            method: 'POST',
+                            data: {
+                                '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (lastUpdatedOn) {
+                                var currentRow = toggleButton.parents('tr');
+                                var status = currentRow.find('.js-status');
+                                status.text(status.text().trim() === 'Deleted' ? 'Available' : 'Deleted');
+                                status.toggleClass('badge-light-danger badge-light-success');
 
-                        var updatedOn = toggleButton.parents('tr').find('#js-last-updated-on');
-                        updatedOn.text(lastUpdatedOn);
+                                var updatedOn = currentRow.find('#js-last-updated-on');
+                                updatedOn.text(lastUpdatedOn);
+                                currentRow.addClass('animate__animated animate__headShake');
+                                setTimeout(function () {
+                                    currentRow.removeClass('animate__animated animate__headShake');
+                                }, 300);
+                               
+                                showFeedbackMessage("The status has been toggled successfully", "success");
+                            },
+                            error: function () {
+                                showFeedbackMessage("Something went wrong!", "error");
+                            }
+                        });
+                        
                     }
                 });
             });
         });
+/*
+
+*/
     </script>
 
 }

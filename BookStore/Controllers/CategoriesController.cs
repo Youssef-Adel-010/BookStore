@@ -39,6 +39,8 @@ public class CategoriesController : Controller
         _context.Categories.Add(category);
         _context.SaveChanges();
 
+        TempData["feedbackMessage"] = "Field Created Successfully";
+
         return RedirectToAction(nameof(Index));
     }
 
@@ -74,6 +76,8 @@ public class CategoriesController : Controller
 
         _context.SaveChanges();
 
+        TempData["feedbackMessage"] = "Field Edited Successfully";
+
         return RedirectToAction(nameof(Index));
 
     }
@@ -82,6 +86,9 @@ public class CategoriesController : Controller
     {
         _context.Categories.ExecuteDelete();
         _context.SaveChanges();
+
+        TempData["feedbackMessage"] = "The data has been cleared";
+
         return RedirectToAction(nameof(Index));
     }
     [HttpPost]
@@ -97,6 +104,8 @@ public class CategoriesController : Controller
         category.LastUpdatedOn = DateTime.Now;
 
         _context.SaveChanges();
+
+        TempData["feedbackMessage"] = "The status has been toggled successfully";
 
         return Ok(category.LastUpdatedOn.ToString());
     }

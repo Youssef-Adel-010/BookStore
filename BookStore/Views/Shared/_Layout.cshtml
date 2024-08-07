@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="~/Assets/css/style.bundle.css" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/lib/animate.css/animate.compat.min.css" rel="stylesheet" />
+    <link href="~/lib/animate.css/animate.min.css" rel="stylesheet" />
+    <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
     @* <link rel="stylesheet" href="~/Bookify.Web.styles.css" asp-append-version="true" /> *@
 </head>
 <body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed">
@@ -64,6 +67,8 @@
     <script src="~/Assets/js/scripts.bundle.js"></script>
     <!--end::Global Javascript Bundle-->
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

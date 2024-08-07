@@ -1,4 +1,28 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web Assets.
+﻿$(function () {
+    var feedback = $('#feedbackMessage');
+    var message = feedback.text();
+    if (message !== '') {
+        showFeedbackMessage(message, "success");
+    }
+});
 
-// Write your JavaScript code.
+function showFeedbackMessage(message = "Done successfully", type = "success") {
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "1000",
+        "hideDuration": "1000",
+        "timeOut": "3000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+    Command: toastr[type](message, "Done")
+}
