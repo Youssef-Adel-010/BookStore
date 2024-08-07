@@ -4,6 +4,31 @@
     if (message !== '') {
         showFeedbackMessage(message, "success");
     }
+
+    // Handle render modal
+    $('.js-render-modal').on('click', function () {
+        var modal = $('#modal');
+        var button = $(this);
+
+        modal.find('#modalLabel').text(button.data('title'));
+
+        $.ajax({
+            url: button.data('url'),
+            method: 'GET',
+            success: function (form) {
+                var body = modal.find('.modal-body');
+                body.html(form);
+                $.validator.unobtrusive.parse(modal);
+            },
+            error: function () {
+                showFeedbackMessage('Something went wrong', 'error');
+            }
+        });
+
+        modal.modal('show');
+    });
+
+
 });
 
 function showFeedbackMessage(message = "Done successfully", type = "success") {

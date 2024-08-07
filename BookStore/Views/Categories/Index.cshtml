@@ -20,7 +20,7 @@
             Categories
         </h1>
         <div class="card-toolbar">
-            <a asp-controller="Categories" asp-action="Create" class=" me-3 btn btn-sm btn-primary">
+            <a href="#" class="me-3 btn btn-sm btn-primary js-render-modal" data-title="Add Category" data-url="/Categories/Create">
                 Add
             </a>
             <a asp-controller="Categories" asp-action="Clear" class="btn btn-sm btn-danger">
@@ -107,6 +107,7 @@
 
 @section Scripts
 {
+    <partial name="_ValidationScriptsPartial">
     <script>
         $(document).ready(function () {
             $('.js-toggle-status').on('click', function () {

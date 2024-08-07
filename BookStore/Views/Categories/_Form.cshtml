@@ -1,0 +1,12 @@
+﻿@model CategoryFormViewModel
+
+<form method="post" asp-controller="Categories">
+    <div class="mb-5">
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" placeholder="Name" asp-for="Name" autocomplete="off" autofocus />
+            <label asp-for="Name"></label>
+        </div>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <partial name="_ModalFooter" />
+</form>

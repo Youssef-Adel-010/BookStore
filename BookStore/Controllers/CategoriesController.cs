@@ -24,7 +24,7 @@ public class CategoriesController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return View("Form");
+        return PartialView("_Form");
     }
 
     [HttpPost]
@@ -32,7 +32,7 @@ public class CategoriesController : Controller
     public IActionResult Create(CategoryFormViewModel viewModel)
     {
         if (!ModelState.IsValid)
-            return View("Form", viewModel);
+            return View("_Form", viewModel);
 
         Category category = new() { Name = viewModel.Name };
 
@@ -57,7 +57,7 @@ public class CategoriesController : Controller
             Name = category.Name
         };
 
-        return View("Form", viewModel);
+        return View("_Form", viewModel);
     }
 
     [HttpPost]
@@ -65,7 +65,7 @@ public class CategoriesController : Controller
     public IActionResult Edit(CategoryFormViewModel viewModel)
     {
         if (!ModelState.IsValid)
-            return View("Form", viewModel);
+            return View("_Form", viewModel);
         Category? category = _context.Categories.Find(viewModel.Id);
 
         if (category is null)
