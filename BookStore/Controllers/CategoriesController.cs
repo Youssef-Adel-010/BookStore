@@ -39,7 +39,7 @@ public class CategoriesController : Controller
         _context.Categories.Add(category);
         _context.SaveChanges();
 
-        TempData["feedbackMessage"] = "Field Created Successfully";
+        TempData["feedbackMessage"] = "Field created successfully";
 
         return RedirectToAction(nameof(Index));
     }
@@ -76,7 +76,7 @@ public class CategoriesController : Controller
 
         _context.SaveChanges();
 
-        TempData["feedbackMessage"] = "Field Edited Successfully";
+        TempData["feedbackMessage"] = "Field edited successfully";
 
         return RedirectToAction(nameof(Index));
 
@@ -87,7 +87,7 @@ public class CategoriesController : Controller
         _context.Categories.ExecuteDelete();
         _context.SaveChanges();
 
-        TempData["feedbackMessage"] = "The data has been cleared";
+        TempData["feedbackMessage"] = "The data cleared successfully";
 
         return RedirectToAction(nameof(Index));
     }
@@ -105,7 +105,7 @@ public class CategoriesController : Controller
 
         _context.SaveChanges();
 
-        TempData["feedbackMessage"] = "The status has been toggled successfully";
+        TempData["feedbackMessage"] = "Field status toggled successfully";
 
         return Ok(category.LastUpdatedOn.ToString());
     }

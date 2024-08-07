@@ -102,6 +102,7 @@
         }
     </div>
 </div>
+
 @Html.AntiForgeryToken()
 
 @section Scripts
@@ -145,8 +146,8 @@
                                 setTimeout(function () {
                                     currentRow.removeClass('animate__animated animate__headShake');
                                 }, 300);
-                               
-                                showFeedbackMessage("The status has been toggled successfully", "success");
+
+                                showFeedbackMessage("Field status toggled successfully", "success");
                             },
                             error: function () {
                                 showFeedbackMessage("Something went wrong!", "error");
