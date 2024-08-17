@@ -1,6 +1,6 @@
 ﻿@model CategoryFormViewModel
 
-<form method="post" asp-controller="Categories">
+<form asp-action="@(Model?.Id > 0 ? "Edit" : "Create")" method="post" data-ajax="true" data-ajax-method="post" data-ajax-success="onModalSuccess" data-ajax-failure="onModalFailure">
     <div class="mb-5">
         <div class="form-floating mb-2">
             <input type="text" class="form-control" placeholder="Name" asp-for="Name" autocomplete="off" autofocus />

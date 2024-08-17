@@ -1,6 +1,7 @@
 ﻿using BookStore.Core.Models;
 using BookStore.Core.ViewModels;
 using BookStore.Data;
+using BookStore.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +23,7 @@ public class CategoriesController : Controller
     }
 
     [HttpGet]
+    [AjaxOnly]
     public IActionResult Create()
     {
         return PartialView("_Form");
@@ -32,19 +34,18 @@ public class CategoriesController : Controller
     public IActionResult Create(CategoryFormViewModel viewModel)
     {
         if (!ModelState.IsValid)
-            return View("_Form", viewModel);
+            return BadRequest();
 
         Category category = new() { Name = viewModel.Name };
 
         _context.Categories.Add(category);
         _context.SaveChanges();
 
-        TempData["feedbackMessage"] = "Field created successfully";
-
-        return RedirectToAction(nameof(Index));
+        return PartialView("_CategoryRow", category);
     }
 
     [HttpGet]
+    [AjaxOnly]
     public IActionResult Edit(int id)
     {
         Category? category = _context.Categories.Find(id);
@@ -57,7 +58,7 @@ public class CategoriesController : Controller
             Name = category.Name
         };
 
-        return View("_Form", viewModel);
+        return PartialView("_Form", viewModel);
     }
 
     [HttpPost]
@@ -65,7 +66,7 @@ public class CategoriesController : Controller
     public IActionResult Edit(CategoryFormViewModel viewModel)
     {
         if (!ModelState.IsValid)
-            return View("_Form", viewModel);
+            return BadRequest();
         Category? category = _context.Categories.Find(viewModel.Id);
 
         if (category is null)
@@ -76,9 +77,7 @@ public class CategoriesController : Controller
 
         _context.SaveChanges();
 
-        TempData["feedbackMessage"] = "Field edited successfully";
-
-        return RedirectToAction(nameof(Index));
+        return PartialView("_CategoryRow", category);
 
     }
     [HttpGet]
@@ -104,8 +103,6 @@ public class CategoriesController : Controller
         category.LastUpdatedOn = DateTime.Now;
 
         _context.SaveChanges();
-
-        TempData["feedbackMessage"] = "Field status toggled successfully";
 
         return Ok(category.LastUpdatedOn.ToString());
     }

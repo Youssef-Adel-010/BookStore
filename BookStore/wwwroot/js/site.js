@@ -1,4 +1,5 @@
-﻿$(function () {
+﻿var updatedRow = undefined;
+$(function () {
     var feedback = $('#feedbackMessage');
     var message = feedback.text();
     if (message !== '') {
@@ -6,11 +7,15 @@
     }
 
     // Handle render modal
-    $('.js-render-modal').on('click', function () {
+    $('body').delegate('.js-render-modal', 'click', function () {
         var modal = $('#modal');
         var button = $(this);
 
         modal.find('#modalLabel').text(button.data('title'));
+
+        if (button.data('is-update') !== undefined) {
+            updatedRow = button.parents('tr');
+        }
 
         $.ajax({
             url: button.data('url'),
@@ -50,4 +55,15 @@ function showFeedbackMessage(message = "Done successfully", type = "success") {
         "hideMethod": "fadeOut"
     }
     Command: toastr[type](message, "Done")
+}
+
+function onModalSuccess(newRow) {
+    $('#modal').modal('hide');
+    showFeedbackMessage("Field created successfully", "success");
+    updatedRow === undefined ? $('tbody').append(newRow) : $(updatedRow).replaceWith(newRow);
+}
+
+function onModalFailure() {
+    $('#modal').modal('hide');
+    showFeedbackMessage("Something went wrong!", "error");
 }

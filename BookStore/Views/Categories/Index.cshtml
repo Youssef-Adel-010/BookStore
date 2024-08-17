@@ -50,7 +50,6 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr class="fw-bold fs-6 text-gray-800">
-                            <th>ID</th>
                             <th>Name</th>
                             <th>Created On</th>
                             <th>Last Updated On</th>
@@ -59,42 +58,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @{
-                            int c = 1;
-                        }
                         @foreach (var category in Model)
                         {
-                            <tr>
-                                <td>@c</td>
-                                @{
-                                    c++;
-                                }
-                                <td>@category.Name</td>
-                                <td>@category.CreatedOn.ToString()</td>
-                                @* <td>@category.CreatedOn.ToString("dd-MM-yyyy")</td> *@
-                                @* <td>@category.LastUpdatedOn?.ToString("dd-MM-yyyy")</td> *@
-                                <td id="js-last-updated-on">@category.LastUpdatedOn?.ToString()</td>
-                                <td>
-                                    <span class="badge badge-light-@(category.IsDeleted? "danger" : "success") js-status">
-                                        @(category.IsDeleted ? "Deleted" : "Available")
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a class="btn btn-sm btn-light-primary" data-bs-toggle="dropdown" aria-expanded="false">
-                                            •••
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id">Edit</a></li>
-                                            <li>
-                                                <a href="#" class="dropdown-item js-toggle-status" data-id="@category.Id">
-                                                    Toggle State
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
+                            <partial name="_CategoryRow" model="@category" />
                         }
                     </tbody>
                 </table>
@@ -110,7 +76,7 @@
     <partial name="_ValidationScriptsPartial">
     <script>
         $(document).ready(function () {
-            $('.js-toggle-status').on('click', function () {
+            $('body').delegate('.js-toggle-status', 'click', function () {
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {
                         confirmButton: "btn btn-danger",
@@ -136,6 +102,7 @@
                                 '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
                             },
                             success: function (lastUpdatedOn) {
+                                showFeedbackMessage("Field status toggled successfully", "success");
                                 var currentRow = toggleButton.parents('tr');
                                 var status = currentRow.find('.js-status');
                                 status.text(status.text().trim() === 'Deleted' ? 'Available' : 'Deleted');
@@ -148,7 +115,6 @@
                                     currentRow.removeClass('animate__animated animate__headShake');
                                 }, 300);
 
-                                showFeedbackMessage("Field status toggled successfully", "success");
                             },
                             error: function () {
                                 showFeedbackMessage("Something went wrong!", "error");
@@ -159,9 +125,6 @@
                 });
             });
         });
-/*
-
-*/
     </script>
 
 }

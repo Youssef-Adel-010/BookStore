@@ -1,0 +1,28 @@
+﻿@model Category
+<tr>
+    <td>@Model.Name</td>
+    <td>@Model.CreatedOn.ToString()</td>
+    @* <td>@Model.CreatedOn.ToString("dd-MM-yyyy")</td> *@
+    @* <td>@Model.LastUpdatedOn?.ToString("dd-MM-yyyy")</td> *@
+    <td id="js-last-updated-on">@Model.LastUpdatedOn?.ToString()</td>
+    <td>
+        <span class="badge badge-light-@(Model.IsDeleted? "danger" : "success") js-status">
+            @(Model.IsDeleted ? "Deleted" : "Available")
+        </span>
+    </td>
+    <td>
+        <div class="btn-group">
+            <a class="btn btn-sm btn-light-primary" data-bs-toggle="dropdown" aria-expanded="false">
+                •••
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="#" class="dropdown-item js-render-modal" data-is-update="true" data-title="Edit Category" data-url="/Categories/Edit/@Model.Id">Edit</a></li>
+                <li>
+                    <a href="#" class="dropdown-item js-toggle-status" data-id="@Model.Id">
+                        Toggle State
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>
