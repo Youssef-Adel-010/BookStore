@@ -31,12 +31,12 @@ public class CategoriesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(CategoryFormViewModel viewModel)
+    public IActionResult Create(CategoryFormViewModel model)
     {
         if (!ModelState.IsValid)
             return BadRequest();
 
-        Category category = new() { Name = viewModel.Name };
+        Category category = new() { Name = model.Name };
 
         _context.Categories.Add(category);
         _context.SaveChanges();
@@ -52,27 +52,27 @@ public class CategoriesController : Controller
         if (category is null)
             return NotFound();
 
-        CategoryFormViewModel viewModel = new()
+        CategoryFormViewModel model = new()
         {
             Id = category.Id,
             Name = category.Name
         };
 
-        return PartialView("_Form", viewModel);
+        return PartialView("_Form", model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(CategoryFormViewModel viewModel)
+    public IActionResult Edit(CategoryFormViewModel model)
     {
         if (!ModelState.IsValid)
             return BadRequest();
-        Category? category = _context.Categories.Find(viewModel.Id);
+        Category? category = _context.Categories.Find(model.Id);
 
         if (category is null)
             return NotFound();
 
-        category.Name = viewModel.Name;
+        category.Name = model.Name;
         category.LastUpdatedOn = DateTime.Now;
 
         _context.SaveChanges();
@@ -107,4 +107,11 @@ public class CategoriesController : Controller
         return Ok(category.LastUpdatedOn.ToString());
     }
 
+    public IActionResult UniqueFieldValidation(CategoryFormViewModel model)
+    {
+        Category? category = _context.Categories.SingleOrDefault(c => c.Name == model.Name);
+        bool IsAccepted = category is null || category.Id.Equals(model.Id);
+
+        return Json(IsAccepted);
+    }
 }

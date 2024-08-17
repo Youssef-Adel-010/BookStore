@@ -6,7 +6,7 @@ $(function () {
         showFeedbackMessage(message, "success");
     }
 
-    // Handle render modal
+    // Handle Render Modal
     $('body').delegate('.js-render-modal', 'click', function () {
         var modal = $('#modal');
         var button = $(this);
@@ -33,6 +33,55 @@ $(function () {
         modal.modal('show');
     });
 
+    // Handle Toggle Status
+    $('body').delegate('.js-toggle-status', 'click', function () {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-danger",
+                cancelButton: "btn btn-success"
+            },
+            buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: "You want to toggle this field status",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "cancel",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var toggleButton = $(this);
+                $.ajax({
+                    url: toggleButton.data('url'),
+                    method: 'POST',
+                    data: {
+                        '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (lastUpdatedOn) {
+                        showFeedbackMessage("Field status toggled successfully", "success");
+                        var currentRow = toggleButton.parents('tr');
+                        var status = currentRow.find('.js-status');
+                        status.text(status.text().trim() === 'Deleted' ? 'Available' : 'Deleted');
+                        status.toggleClass('badge-light-danger badge-light-success');
+
+                        var updatedOn = currentRow.find('#js-last-updated-on');
+                        updatedOn.text(lastUpdatedOn);
+                        currentRow.addClass('animate__animated animate__headShake');
+                        setTimeout(function () {
+                            currentRow.removeClass('animate__animated animate__headShake');
+                        }, 300);
+
+                    },
+                    error: function () {
+                        showFeedbackMessage("Something went wrong!", "error");
+                    }
+                });
+
+            }
+        });
+    });
 
 });
 

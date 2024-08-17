@@ -1,5 +1,8 @@
-﻿namespace BookStore.Core.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace BookStore.Core.Models;
+
+[Index(nameof(Name), IsUnique = true)]
 public class Category
 {
     public int Id { get; set; }

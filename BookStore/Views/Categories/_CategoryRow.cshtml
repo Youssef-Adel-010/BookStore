@@ -16,9 +16,13 @@
                 •••
             </a>
             <ul class="dropdown-menu">
-                <li><a href="#" class="dropdown-item js-render-modal" data-is-update="true" data-title="Edit Category" data-url="/Categories/Edit/@Model.Id">Edit</a></li>
                 <li>
-                    <a href="#" class="dropdown-item js-toggle-status" data-id="@Model.Id">
+                   <a href="#" class="dropdown-item js-render-modal" data-is-update="true" data-title="Edit Category" data-url="/Categories/Edit/@Model.Id">
+                    Edit
+                   </a>
+                </li>
+                <li>
+                    <a href="#" class="dropdown-item js-toggle-status" data-url="/Categories/ToggleStatus/@Model.Id">
                         Toggle State
                     </a>
                 </li>

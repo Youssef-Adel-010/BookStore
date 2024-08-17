@@ -3,8 +3,13 @@
 <form asp-action="@(Model?.Id > 0 ? "Edit" : "Create")" method="post" data-ajax="true" data-ajax-method="post" data-ajax-success="onModalSuccess" data-ajax-failure="onModalFailure">
     <div class="mb-5">
         <div class="form-floating mb-2">
+            @if (Model?.Id > 0)
+            {
+                <input type="hidden" asp-for="Id" />
+            }
             <input type="text" class="form-control" placeholder="Name" asp-for="Name" autocomplete="off" autofocus />
             <label asp-for="Name"></label>
+            <span asp-validation-for="Name" />
         </div>
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
