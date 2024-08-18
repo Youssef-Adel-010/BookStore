@@ -1,7 +1,7 @@
-﻿@model IEnumerable<CategoryViewModel>
+﻿@model IEnumerable<AuthorViewModel>
 
 @{
-    ViewData["Title"] = "Categories";
+    ViewData["Title"] = "Authors";
 }
 <span id="feedbackMessage" class="d-none">@TempData["feedbackMessage"]</span>
 <div class="card shadow-sm">
@@ -17,13 +17,13 @@
             </div>
             <span class="svg-icon svg-icon-2">
             </span>
-            Categories
+            Authors
         </h1>
         <div class="card-toolbar">
-            <a href="#" class="me-3 btn btn-sm btn-primary js-render-modal" data-title="Add Category" data-url="/Categories/Create">
+            <a href="#" class="me-3 btn btn-sm btn-primary js-render-modal" data-title="Add Author" data-url="/Authors/Create">
                 Add
             </a>
-            <a asp-controller="Categories" asp-action="Clear" class="btn btn-sm btn-danger">
+            <a asp-controller="Authors" asp-action="Clear" class="btn btn-sm btn-danger">
                 Clear
             </a>
         </div>
@@ -40,7 +40,7 @@
                     </svg>
                 </span>
                 <div class="d-flex flex-column pe-0 pe-sm-10 align-self-center ml-3">
-                    <h3 class="mb-1 ml-1">No Categories Added</h3>
+                    <h3 class="mb-1 ml-1">No Authors Added</h3>
                 </div>
             </div>
         }
@@ -58,9 +58,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var category in Model)
+                        @foreach (var author in Model)
                         {
-                            <partial name="_CategoryRow" model="@category" />
+                            <partial name="_AuthorRow" model="@author" />
                         }
                     </tbody>
                 </table>

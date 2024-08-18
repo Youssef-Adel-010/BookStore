@@ -1,4 +1,5 @@
 ﻿global using AutoMapper;
+global using BookStore.Constants;
 global using BookStore.Core.Models;
 global using BookStore.Core.ViewModels;
 global using BookStore.Data;
