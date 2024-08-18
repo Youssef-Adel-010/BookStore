@@ -1,25 +1,26 @@
-﻿using BookStore.Core.Models;
-using BookStore.Core.ViewModels;
-using BookStore.Data;
-using BookStore.Filters;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿namespace BookStore.Controllers;
 
-namespace BookStore.Controllers;
 public class CategoriesController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public CategoriesController(ApplicationDbContext context)
+    public CategoriesController(ApplicationDbContext context, IMapper mapper)
     {
-        _context = context;
+        this._context = context;
+        this._mapper = mapper;
     }
 
     [HttpGet]
     public IActionResult Index()
     {
-        var categories = _context.Categories.AsNoTracking().ToList();
-        return View(categories);
+        var categories = _context.Categories
+            .AsNoTracking()
+            .ToList();
+
+        var viewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+
+        return View(viewModel);
     }
 
     [HttpGet]
@@ -36,27 +37,26 @@ public class CategoriesController : Controller
         if (!ModelState.IsValid)
             return BadRequest();
 
-        Category category = new() { Name = model.Name };
+        var category = _mapper.Map<Category>(model);
 
         _context.Categories.Add(category);
         _context.SaveChanges();
 
-        return PartialView("_CategoryRow", category);
+        var viewModel = _mapper.Map<CategoryViewModel>(category);
+
+        return PartialView("_CategoryRow", viewModel);
     }
 
     [HttpGet]
     [AjaxOnly]
     public IActionResult Edit(int id)
     {
-        Category? category = _context.Categories.Find(id);
+        var category = _context.Categories.Find(id);
+
         if (category is null)
             return NotFound();
 
-        CategoryFormViewModel model = new()
-        {
-            Id = category.Id,
-            Name = category.Name
-        };
+        var model = _mapper.Map<CategoryFormViewModel>(category);
 
         return PartialView("_Form", model);
     }
@@ -67,34 +67,28 @@ public class CategoriesController : Controller
     {
         if (!ModelState.IsValid)
             return BadRequest();
-        Category? category = _context.Categories.Find(model.Id);
+
+        var category = _context.Categories.Find(model.Id);
 
         if (category is null)
             return NotFound();
 
-        category.Name = model.Name;
+        category = _mapper.Map(model, category);
         category.LastUpdatedOn = DateTime.Now;
 
         _context.SaveChanges();
 
-        return PartialView("_CategoryRow", category);
+        var viewModel = _mapper.Map<CategoryViewModel>(category);
+
+        return PartialView("_CategoryRow", viewModel);
 
     }
-    [HttpGet]
-    public IActionResult Clear()
-    {
-        _context.Categories.ExecuteDelete();
-        _context.SaveChanges();
 
-        TempData["feedbackMessage"] = "The data cleared successfully";
-
-        return RedirectToAction(nameof(Index));
-    }
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult ToggleStatus(int id)
     {
-        Category? category = _context.Categories.Find(id);
+        var category = _context.Categories.Find(id);
 
         if (category is null)
             return NotFound();
@@ -109,9 +103,21 @@ public class CategoriesController : Controller
 
     public IActionResult UniqueFieldValidation(CategoryFormViewModel model)
     {
-        Category? category = _context.Categories.SingleOrDefault(c => c.Name == model.Name);
+        var category = _context.Categories.SingleOrDefault(c => c.Name == model.Name);
+
         bool IsAccepted = category is null || category.Id.Equals(model.Id);
 
         return Json(IsAccepted);
+    }
+
+    [HttpGet]
+    public IActionResult Clear()
+    {
+        _context.Categories.ExecuteDelete();
+        _context.SaveChanges();
+
+        TempData["feedbackMessage"] = "The data cleared successfully";
+
+        return RedirectToAction(nameof(Index));
     }
 }

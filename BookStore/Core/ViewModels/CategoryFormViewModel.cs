@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace BookStore.Core.ViewModels;
+﻿namespace BookStore.Core.ViewModels;
 
 public class CategoryFormViewModel
 {

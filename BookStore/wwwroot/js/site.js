@@ -106,6 +106,9 @@ function showFeedbackMessage(message = "Done successfully", type = "success") {
     Command: toastr[type](message, "Done")
 }
 
+function OnModalBegin() {
+    $('body :submit').attr('disabled', 'disabled').attr('data-kt-indicator', 'on');
+}
 function onModalSuccess(newRow) {
     $('#modal').modal('hide');
     showFeedbackMessage("Field created successfully", "success");
@@ -115,4 +118,8 @@ function onModalSuccess(newRow) {
 function onModalFailure() {
     $('#modal').modal('hide');
     showFeedbackMessage("Something went wrong!", "error");
+}
+
+function OnModalComplete() {
+    $('body :submit').removeAttr('disabled');
 }

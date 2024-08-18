@@ -1,6 +1,13 @@
 ﻿@model CategoryFormViewModel
 
-<form asp-action="@(Model?.Id > 0 ? "Edit" : "Create")" method="post" data-ajax="true" data-ajax-method="post" data-ajax-success="onModalSuccess" data-ajax-failure="onModalFailure">
+<form asp-action="@(Model?.Id > 0 ? "Edit" : "Create")" method="post" 
+    data-ajax="true" 
+    data-ajax-method="post" 
+    data-ajax-begin="OnModalBegin" 
+    data-ajax-success="onModalSuccess" 
+    data-ajax-failure="onModalFailure"
+    data-ajax-complete="OnModalComplete">
+    
     <div class="mb-5">
         <div class="form-floating mb-2">
             @if (Model?.Id > 0)
