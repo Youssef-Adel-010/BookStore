@@ -7,4 +7,7 @@ public class Category : BaseModel
 
     [MaxLength(50)]
     public string Name { get; set; } = null!;
+
+    public ICollection<BookCategory> Books { get; set; } = [];
+
 }

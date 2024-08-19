@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
-namespace BookStore.Filters;
+namespace BookStore.Data.Filters;
 
 public class AjaxOnly : ActionMethodSelectorAttribute
 {
