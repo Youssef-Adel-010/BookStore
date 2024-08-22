@@ -20,11 +20,55 @@
         </h1>
     </div>
     <div class="card-body">
-        <form method="post" asp-controller="Books" asp-action="@(Model.Id.Equals(0) ? "Create" : "Edit" )" enctype="multipart/form-data">
+        <form method="post" asp-controller="Books" asp-action="@(Model.Id.Equals(0) ? "Create" : "Edit" )" enctype="multipart/form-data" >
             @if (Model.Id > 0)
             {
                 <input type="hidden" asp-for="Id" />
             }
+            <!--begin::Image input placeholder-->
+            <style>
+                .image-input-placeholder {
+                    background-image: url('svg/avatars/blank.svg');
+                }
+
+                [data-bs-theme="dark"] .image-input-placeholder {
+                    background-image: url('svg/avatars/blank-dark.svg');
+                }
+            </style>
+            <!--end::Image input placeholder-->
+            <!--begin::Image input-->
+            <div class="image-input image-input-empty mb-7" data-kt-image-input="true" style="background-image: url(/images/image-placeholder.jpg)">
+                <!--begin::Image preview wrapper-->
+                <div class="image-input-wrapper w-125px h-200px"></div>
+                <!--end::Image preview wrapper-->
+                <!--begin::Edit button-->
+                <label class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                       data-kt-image-input-action="change"
+                       data-bs-dismiss="click">
+                    <i class="bi bi-pencil-fill fs-7"></i>
+
+                    <!--begin::Inputs-->
+                    <input type="file" asp-for="Image" accept=".png, .jpg, .jpeg" />
+                    <input type="hidden" name="avatar_remove" />
+                    <!--end::Inputs-->
+                </label>
+                <!--end::Edit button-->
+                <!--begin::Cancel button-->
+                <span class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                      data-kt-image-input-action="cancel"
+                      data-bs-dismiss="click">
+                    <i class="bi bi-x fs-3"></i>
+                </span>
+                <!--end::Cancel button-->
+                <!--begin::Remove button-->
+                <span class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                      data-kt-image-input-action="remove"
+                      data-bs-dismiss="click">
+                    <i class="ki-outline ki-cross fs-3"></i>
+                </span>
+                <!--end::Remove button-->
+            </div>
+            <!--end::Image input-->
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-floating mb-5">
@@ -35,12 +79,12 @@
                     <span calss="text-danger" asp-validation-for="Title"></span>
                 </div>
             </div>
+            <span calss="text-danger" asp-validation-for="Image"></span>
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-5">
                         <label asp-for="SelectedCategories"></label>
-                        <select class="form-select" asp-for="SelectedCategories" asp-items="@Model!.Categories">
-                        </select>
+                        <select class="form-select" asp-for="SelectedCategories" asp-items="@Model!.Categories"></select>
                     </div>
                     <span calss="text-danger" asp-validation-for="SelectedCategories"></span>
                 </div>
@@ -90,16 +134,6 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-floating mb-5">
-                        <input type="file" class="form-control" placeholder="Image" asp-for="Image" accept=".jpg,.jpeg,.png" />
-                        <label asp-for="Image"></label>
-                        <span asp-validation-for="Image" />
-                    </div>
-                    <span calss="text-danger" asp-validation-for="Image"></span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
                     <div class="form-floating">
                         <textarea class="form-control" placeholder="Description" asp-for="Description" style="height: 100px"></textarea>
                         <label asp-for="Description"></label>
@@ -128,6 +162,7 @@
     </div>
 </div>
 
-@section Scripts {
+@section Scripts
+{
     <partial name="_ValidationScriptsPartial"></partial>
 }
