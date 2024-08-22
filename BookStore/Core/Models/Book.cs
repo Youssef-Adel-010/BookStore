@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace BookStore.Core.Models;
+﻿namespace BookStore.Core.Models;
 
 [Index(nameof(Title), nameof(Publisher), IsUnique = true)]
 public class Book : BaseModel
@@ -27,7 +25,7 @@ public class Book : BaseModel
     [ForeignKey(nameof(Author))]
     public int AuthorId { get; set; }
 
-    public Author? Author { get; set; }
+    public virtual Author? Author { get; set; }
 
-    public ICollection<BookCategory> Categories { get; set; } = [];
+    public virtual ICollection<BookCategory> Categories { get; set; } = [];
 }

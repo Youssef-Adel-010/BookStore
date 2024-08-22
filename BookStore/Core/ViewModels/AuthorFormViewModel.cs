@@ -6,6 +6,6 @@ public class AuthorFormViewModel
 
     [MaxLength(50, ErrorMessage = Errors.MaxLength)]
     [Display(Name = "Category")]
-    [Remote("UniqueFieldValidation", "Authors", AdditionalFields = "Id", ErrorMessage = "Field with the same name is already exist")]
+    [Remote("UniqueFieldValidation", "Authors", AdditionalFields = "Id", ErrorMessage = Errors.Duplicated)]
     public string Name { get; set; } = null!;
 }

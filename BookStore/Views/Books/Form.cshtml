@@ -1,0 +1,133 @@
+﻿@model BookFormViewModel
+
+@{
+    ViewData["Title"] = "Book Form";
+}
+<span id="feedbackMessage" class="d-none">@TempData["feedbackMessage"]</span>
+<div class="card shadow-sm mb-12">
+    <div class="card-header">
+        <h1 class="card-title">
+            <div class="symbol symbol-40px">
+                <div class="symbol-label fs-2 fw-semibold text-primary me-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
+                        <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783" />
+                    </svg>
+                </div>
+            </div>
+            <span class="svg-icon svg-icon-2">
+            </span>
+            @(Model.Id.Equals(0) ? "Add" : "Edit") Books
+        </h1>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-controller="Books" asp-action="@(Model.Id.Equals(0) ? "Create" : "Edit" )" enctype="multipart/form-data">
+            @if (Model.Id > 0)
+            {
+                <input type="hidden" asp-for="Id" />
+            }
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating mb-5">
+                        <input type="text" class="form-control" placeholder="Title" asp-for="Title" autocomplete="off" autofocus />
+                        <label asp-for="Title"></label>
+                        <span asp-validation-for="Title" />
+                    </div>
+                    <span calss="text-danger" asp-validation-for="Title"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-5">
+                        <label asp-for="SelectedCategories"></label>
+                        <select class="form-select" asp-for="SelectedCategories" asp-items="@Model!.Categories">
+                        </select>
+                    </div>
+                    <span calss="text-danger" asp-validation-for="SelectedCategories"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating mb-5">
+                        <select class="form-select" asp-for="AuthorId" asp-items="@Model!.Authors">
+                            <option value="" selected hidden>Select Author</option>
+                        </select>
+                        <label asp-for="AuthorId"></label>
+                    </div>
+                    <span calss="text-danger" asp-validation-for="AuthorId"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating mb-5">
+                        <input type="text" class="form-control" placeholder="Publisher" asp-for="Publisher" autocomplete="off" autofocus />
+                        <label asp-for="Publisher"></label>
+                        <span asp-validation-for="Publisher" />
+                    </div>
+                    <span calss="text-danger" asp-validation-for="Publisher"></span>
+                </div>
+                <span calss="text-danger" asp-validation-for="Publisher"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating mb-5">
+                        <input type="text" class="form-control" placeholder="Hall" asp-for="Hall" autocomplete="off" />
+                        <label asp-for="Hall"></label>
+                        <span asp-validation-for="Hall" />
+                    </div>
+                    <span calss="text-danger" asp-validation-for="Hall"></span>
+                </div>
+                <span calss="text-danger" asp-validation-for="Hall"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating mb-5">
+                        <input type="date" class="form-control" placeholder="PublishingDate" asp-for="PublishingDate" />
+                        <label asp-for="PublishingDate"></label>
+                        <span asp-validation-for="PublishingDate" />
+                    </div>
+                    <span calss="text-danger" asp-validation-for="PublishingDate"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating mb-5">
+                        <input type="file" class="form-control" placeholder="Image" asp-for="Image" accept=".jpg,.jpeg,.png" />
+                        <label asp-for="Image"></label>
+                        <span asp-validation-for="Image" />
+                    </div>
+                    <span calss="text-danger" asp-validation-for="Image"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Description" asp-for="Description" style="height: 100px"></textarea>
+                        <label asp-for="Description"></label>
+                    </div>
+                    <span calss="text-danger" asp-validation-for="Description"></span>
+                </div>
+            </div>
+            <div class="form-check">
+                <div class="row">
+                    <div class="col-md-6 mt-5">
+                        <input class="form-check-input" type="checkbox" asp-for="IsAvailableForRental">
+                        <label class="form-check-label" asp-for="IsAvailableForRental"></label>
+                    </div>
+                </div>
+                <span calss="text-danger" asp-validation-for="IsAvailableForRental"></span>
+            </div>
+            <button type="submit" class="btn btn-primary mt-5">
+                <span class="indicator-label">
+                    Save
+                </span>
+                <span class="indicator-progress">
+                    Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                </span>
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"></partial>
+}

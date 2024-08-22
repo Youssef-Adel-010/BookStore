@@ -3,10 +3,10 @@
 namespace BookStore.Data;
 public class ApplicationDbContext : IdentityDbContext
 {
-    public DbSet<Author> Authors { get; set; }
-    public DbSet<Book> Books { get; set; }
-    public DbSet<BookCategory> BookCategories { get; set; }
-    public DbSet<Category> Categories { get; set; }
+    public virtual DbSet<Author> Authors { get; set; }
+    public virtual DbSet<Book> Books { get; set; }
+    public virtual DbSet<BookCategory> BookCategories { get; set; }
+    public virtual DbSet<Category> Categories { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -21,4 +21,3 @@ public class ApplicationDbContext : IdentityDbContext
         base.OnModelCreating(builder);
     }
 }
-
