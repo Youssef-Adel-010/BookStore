@@ -83,6 +83,15 @@ $(function () {
         });
     });
 
+    // Handle datepicker
+    $('.js-date-picker').daterangepicker({
+        singleDatePicker: true,
+        drops: 'auto',
+        autoApply: true
+    });
+
+    // Handle Select2
+    $('.js-select2').select2();
 });
 
 function showFeedbackMessage(message = "Done successfully", type = "success") {
