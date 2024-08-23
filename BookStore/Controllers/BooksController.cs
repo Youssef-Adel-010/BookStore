@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace BookStore.Controllers;
+﻿namespace BookStore.Controllers;
 public class BooksController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -156,6 +154,14 @@ public class BooksController : Controller
         _context.SaveChanges();
 
         return RedirectToAction(nameof(Index));
+    }
+
+    public bool UniqueTogetherValidation(BookFormViewModel model)
+    {
+        var book = _context.Books.SingleOrDefault(b => b.Title == model.Title && b.AuthorId == model.AuthorId);
+        var isAllowed = book is null || book.Id.Equals(model.Id);
+
+        return isAllowed;
     }
 
     private BookFormViewModel FillViewModel(BookFormViewModel? model = null)

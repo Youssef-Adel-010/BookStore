@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace BookStore.Core.ViewModels;
+﻿namespace BookStore.Core.ViewModels;
 
 public class BookFormViewModel
 {
     public int Id { get; set; }
 
     [MaxLength(50, ErrorMessage = Errors.MaxLength)]
+    [Remote("UniqueTogetherValidation", "Books", AdditionalFields = "Id,AuthorId", ErrorMessage = Errors.DuplicatedTogether)]
     public string Title { get; set; } = null!;
 
     [MaxLength(50, ErrorMessage = Errors.MaxLength)]
@@ -19,6 +18,7 @@ public class BookFormViewModel
     public string Description { get; set; } = null!;
 
     [Display(Name = "Publishing Date")]
+    [AssertThat("PublishingDate <= Today()", ErrorMessage = Errors.FutureDates)]
     public DateTime PublishingDate { get; set; } = DateTime.Now;
 
     [Display(Name = "This book is available for rental")]
@@ -30,6 +30,7 @@ public class BookFormViewModel
 
     [ForeignKey(nameof(Author))]
     [Display(Name = "Author")]
+    [Remote("UniqueTogetherValidation", "Books", AdditionalFields = "Id,Title", ErrorMessage = Errors.DuplicatedTogether)]
     public int AuthorId { get; set; }
 
     public IEnumerable<SelectListItem>? Authors { get; set; }

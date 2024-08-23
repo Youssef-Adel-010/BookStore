@@ -87,7 +87,8 @@ $(function () {
     $('.js-date-picker').daterangepicker({
         singleDatePicker: true,
         drops: 'auto',
-        autoApply: true
+        autoApply: true,
+        maxDate: new Date()
     });
 
     // Handle Select2

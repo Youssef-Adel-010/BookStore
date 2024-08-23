@@ -27,7 +27,7 @@
             }
 
             <!-- Image input -->
-            <div class="image-input image-input-empty mb-7" data-kt-image-input="true" style="background-image: url(/images/@(string.IsNullOrEmpty(Model.ImageUrl) ? "image-placeholder.jpg" : $"books/{Model.ImageUrl}"))">
+            <div class="image-input image-input-empty mb-3 mt-1" data-kt-image-input="true" style="background-image: url(/images/@(string.IsNullOrEmpty(Model.ImageUrl) ? "image-placeholder.jpg" : $"books/{Model.ImageUrl}")">
                 <div class="image-input-wrapper w-125px h-200px"></div>
                 <label class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
                        data-kt-image-input-action="change"
@@ -52,7 +52,7 @@
             <!-- Two-column layout with Bootstrap grid -->
             <div class="row">
                 <!-- Left column (all other inputs) -->
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" placeholder="Title" asp-for="Title" autocomplete="off" autofocus />
                         <label asp-for="Title"></label>
@@ -98,7 +98,7 @@
                 </div>
 
                 <!-- Right column (Description input) -->
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <div class="form-floating h-100">
                         <textarea class="form-control" placeholder="Description" asp-for="Description" style="height: 358px"></textarea>
                         <label asp-for="Description"></label>

@@ -6,6 +6,6 @@ public class CategoryFormViewModel
 
     [MaxLength(50, ErrorMessage = Errors.MaxLength)]
     [Display(Name = "Category")]
-    [Remote("UniqueFieldValidation", "Categories", AdditionalFields = "Id", ErrorMessage = "Field with the same name is already exist")]
+    [Remote("UniqueFieldValidation", "Categories", AdditionalFields = "Id", ErrorMessage = Errors.Duplicated)]
     public string Name { get; set; } = null!;
 }
