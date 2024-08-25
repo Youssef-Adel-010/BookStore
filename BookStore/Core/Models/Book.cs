@@ -18,6 +18,8 @@ public class Book : BaseModel
 
     public string? ImageUrl { get; set; }
 
+    public string? ImageThumbnailUrl { get; set; }
+
     public bool IsAvailableForRental { get; set; }
 
     public string Description { get; set; } = null!;

@@ -1,17 +1,33 @@
-﻿namespace BookStore.Controllers;
+﻿using BookStore.Settings;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Microsoft.Extensions.Options;
+
+namespace BookStore.Controllers;
 public class BooksController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly Cloudinary _cloudinary;
     private readonly List<string> _allowedExtensions = [".jpg", ".jpeg", ".png"];
     private const int _maxAllowedSize = 2_097_152;
 
-    public BooksController(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment webHostEnvironment)
+    public BooksController(ApplicationDbContext context, IMapper mapper,
+        IWebHostEnvironment webHostEnvironment, IOptions<CloudinarySettings> cloudinary)
     {
         this._context = context;
         this._mapper = mapper;
         this._webHostEnvironment = webHostEnvironment;
+
+        var account = new Account()
+        {
+            Cloud = cloudinary.Value.Cloud,
+            ApiKey = cloudinary.Value.ApiKey,
+            ApiSecret = cloudinary.Value.ApiSecret
+        };
+
+        this._cloudinary = new Cloudinary(account);
     }
 
     public IActionResult Index()
@@ -27,7 +43,7 @@ public class BooksController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(BookFormViewModel model)
+    public async Task<IActionResult> Create(BookFormViewModel model)
     {
         if (!ModelState.IsValid)
             return View("Form", FillViewModel(model));
@@ -51,15 +67,25 @@ public class BooksController : Controller
                 return View("Form", FillViewModel(model));
             }
 
-            var ImageName = $"{Guid.NewGuid()}{extension}";
+            var imageName = $"{Guid.NewGuid()}{extension}";
 
-            var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/books", ImageName);
+            //var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/books", imageName);
+            //using var stream = System.IO.File.Create(path);
+            //await model.Image.CopyToAsync(stream);
+            //book.ImageUrl = imageName;
 
-            using var stream = System.IO.File.Create(path);
+            using var stream = model.Image.OpenReadStream();
 
-            model.Image.CopyTo(stream);
+            var imageParams = new ImageUploadParams()
+            {
+                File = new FileDescription(imageName, stream)
+            };
 
-            book.ImageUrl = ImageName;
+            var result = await _cloudinary.UploadAsync(imageParams);
+
+            book.ImageUrl = result.SecureUrl.ToString();
+
+            book.ImageThumbnailUrl = GetThumbnailUrl(book.ImageUrl);
 
         }
 
@@ -91,7 +117,7 @@ public class BooksController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(BookFormViewModel model)
+    public async Task<IActionResult> Edit(BookFormViewModel model)
     {
         if (!ModelState.IsValid)
             return View("Form", FillViewModel(model));
@@ -126,18 +152,18 @@ public class BooksController : Controller
                 return View("Form", FillViewModel(model));
             }
 
-            var ImageName = $"{Guid.NewGuid()}{extension}";
+            var imageName = $"{Guid.NewGuid()}{extension}";
 
-            var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/books", ImageName);
+            var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/books", imageName);
 
             using var stream = System.IO.File.Create(path);
 
-            model.Image.CopyTo(stream);
+            await model.Image.CopyToAsync(stream);
 
-            model.ImageUrl = ImageName;
+            model.ImageUrl = imageName;
 
         }
-        else if (model.Image is null && !string.IsNullOrEmpty(book.ImageUrl))
+        else if (!string.IsNullOrEmpty(book.ImageUrl))
         {
             model.ImageUrl = book.ImageUrl;
         }
@@ -183,4 +209,15 @@ public class BooksController : Controller
 
         return viewModel;
     }
+
+    private static string GetThumbnailUrl(string originalUrl)
+    {
+        string thumbnailUrl = originalUrl
+            .Replace("/image/upload/",
+            "/image/upload/c_thumb,w_200,g_face/",
+            StringComparison.OrdinalIgnoreCase);
+
+        return thumbnailUrl;
+    }
+
 }
