@@ -93,6 +93,10 @@ $(function () {
 
     // Handle Select2
     $('.js-select2').select2();
+    $('.js-select2').on('select2:select', function (e) {
+        $('form').validate().element('#' + $(this).attr('id'))
+    });
+
 });
 
 function showFeedbackMessage(message = "Done successfully", type = "success") {
